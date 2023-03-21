@@ -1,18 +1,15 @@
 import React, {useState} from 'react';
 import { View, Text } from 'react-native';
 import { Platform } from 'react-native'; //  elemento para saber qual plataforma se esta ultilizando android/ios
-import { useNavigation } from '@react-navigation/native' // importando a biblioteca de navegação
 
 import { Background, Container, Logo, AreaInput, Input, 
          SubmitButton, SubmitText, Link, Linktext, 
-} from './styles'
+} from '../SignIn/styles.js'
 
-export default function SignIn() {
-
+export default function SignUp() {
+  const [nome, setNome] = useState('')  
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-
-  const navigation = useNavigation() // acessando a navegação
 
  return (
   
@@ -22,10 +19,16 @@ export default function SignIn() {
                                                         // pois no android é default 
       enable // precisa do enable pra comecar como true
     >
-      
-      <Logo
-        source={require('../../../assets/Logo.png')}
-      />
+      <AreaInput>
+        <Input
+          placeholder='Digite seu nome'
+          autoCorrect={false}
+          autoCapitalize='none'
+          value={nome}
+          onChangeText={(text) => setNome(text) }
+        />
+      </AreaInput>   
+
 
       <AreaInput>
         <Input
@@ -46,15 +49,12 @@ export default function SignIn() {
           onChangeText={(text) => setPassword(text) }
         />
       </AreaInput>  
-        <SubmitButton >
-          <SubmitText>Acessar</SubmitText>
+        <SubmitButton>
+          <SubmitText>Cadastrar</SubmitText>
         </SubmitButton>
+     
 
-        <Link
-          onPress={() => navigation.navigate('SignUp') // funcao anonima que sera disparada ao clicar e navegará até a page SignUp
-        }>
-          <Linktext>Criar uma conta</Linktext>
-        </Link>  
+        
     </Container>
    </Background> 
   );
