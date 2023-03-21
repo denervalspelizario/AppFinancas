@@ -5,15 +5,18 @@ import firebase from './src/services/FirebaseConnection';                       
 import 'react-native-gesture-handler'; 
 import Routes from './src/routes/index'
 import { NavigationContainer } from '@react-navigation/native';
+import AuthProvider from './src/contexts/auth';
 
 export default function App() {
   return (
     <NavigationContainer >
-      <StatusBar  // escurecendo o header de status do cel 
-       backgroundColor='#131313' 
-       barStyle='light-content' 
-      />
-      <Routes/>
+      <AuthProvider>
+        <StatusBar  // escurecendo o header de status do cel 
+          backgroundColor='#131313' 
+          barStyle='light-content' 
+        />
+        <Routes/>
+      </AuthProvider>
     </NavigationContainer>
   );
 }
