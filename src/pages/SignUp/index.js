@@ -1,15 +1,23 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import { View, Text } from 'react-native';
 import { Platform } from 'react-native'; //  elemento para saber qual plataforma se esta ultilizando android/ios
 
 import { Background, Container, Logo, AreaInput, Input, 
          SubmitButton, SubmitText, Link, Linktext, 
 } from '../SignIn/styles.js'
+import { AuthContext } from '../../contexts/auth';
 
 export default function SignUp() {
   const [nome, setNome] = useState('')  
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const { cadastro } = useContext(AuthContext) // acessando contexto jogando na cont user (ver src > contexts > auth.js) naoe squeça de importar ver linha 8
+  
+  function funcaoCadastro(){          // funcao que ao clicar adiciona as states que são dados do input na 
+                                      // funcao cadastro que envia esses dados la no firebase ( ver src > contexts > auth.js  )
+    cadastro(email, password, nome)
+  
+  }
 
  return (
   
@@ -49,7 +57,9 @@ export default function SignUp() {
           onChangeText={(text) => setPassword(text) }
         />
       </AreaInput>  
-        <SubmitButton>
+        <SubmitButton 
+          onPress={funcaoCadastro} // ao clicar chama a funcaod e cadastro
+           >
           <SubmitText>Cadastrar</SubmitText>
         </SubmitButton>
      
