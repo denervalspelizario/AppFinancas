@@ -11,12 +11,15 @@ export default function SignIn() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const { login } = useContext(AuthContext)
 
   const navigation = useNavigation() // acessando a navegação
   //const { user } = useContext(AuthContext) // acessando contexto user (ver src > contexts > auth.js)
 
-  function login(){
+  function logar(){ // funcao acessada ao clicar no btn
     
+    login(email, password) // funcao login recebendo os states que são os dados do input
+
   }
 
  return (
@@ -51,7 +54,7 @@ export default function SignIn() {
           onChangeText={(text) => setPassword(text) }
         />
       </AreaInput>  
-        <SubmitButton  onPress={login}>
+        <SubmitButton  onPress={logar}>
           <SubmitText>Acessar</SubmitText>
         </SubmitButton>
 

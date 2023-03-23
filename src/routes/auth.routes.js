@@ -29,7 +29,6 @@ export default function AuthRoutes(){
                     headerTintColor: '#00b94a',
                     headerBackTitleVisible: false,
                     headerTitle: 'Voltar',
-                    
                 }}
                 
             />
