@@ -8,7 +8,7 @@ function Routes(){
 
     const { signed, loading } = useContext(AuthContext) // recebendo signed do AuthContext(ver context > auth.js)
 
-    if(loading){
+    if(loading){ // se loading estiver true
         return(
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                 
@@ -17,8 +17,8 @@ function Routes(){
             </View>
         )
     }
-
-    return(
+             // senao retorna as rotas normal
+    return( 
         signed ?  <AppRoutes/> : <AuthRoutes/> // se signed for true(estiver logado) entra no app senão(nao esta logado) entra na autenticação
     )
     

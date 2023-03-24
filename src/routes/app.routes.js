@@ -1,16 +1,20 @@
 import React from "react";
-import { createNativeStackNavigator} from '@react-navigation/native-stack'
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import 'react-native-gesture-handler'; 
+
 
 import Home from '../pages/Home'
 
-const AppStack = createNativeStackNavigator()
+const AppDrawer = createDrawerNavigator()
 
 {/* criando rota em stack que sera rota de cadastro para home */}
 function AppRoutes(){ 
     return(
-        <AppStack.Navigator>
-            <AppStack.Screen name='Home' component={Home}/>
-        </AppStack.Navigator>
+        <AppDrawer.Navigator
+            
+        >
+            <AppDrawer.Screen name='Home' component={Home}/>
+        </AppDrawer.Navigator>
 
     )
 
