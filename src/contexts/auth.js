@@ -111,10 +111,22 @@ export default function AuthProvider({ children }){
                                                                               // foi transformado data em string usando JSON.stringify      
     }
 
+
+
+    // funcao para deslogar
+    async function logout(){
+        await firebase.auth().signOut() // vai ate a autenticacao do firebase e encerra 
+        await AsyncStorage.clear() // limpa todos os dados salvos
+        .then(()=> { // deu certo limpou os dados
+            setUser(null) // entao altera a state user para null fazendo deslogar no app
+        })  
+        // ou seja ao acessar a funcao ele desloga no firebase e limpa todos os dados que estavam salvos do usuário logado
+    }
+
     return(
         <AuthContext.Provider 
             value={ 
-                {signed: !!user ,user, cadastro, login, loading} }>
+                {signed: !!user ,user, cadastro, login, logout, loading} }>
             {children}
         </AuthContext.Provider>
     )

@@ -1,11 +1,11 @@
 import React, {useContext} from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Button } from 'react-native';
 import {AuthContext} from '../../contexts/auth'
 
 export default function Home() {
 
-  const { user } = useContext(AuthContext) // acessando o user do contexto que contem os dados do usuario la no firebase
- 
+  const { user, logout } = useContext(AuthContext) // acessando o user do contexto que contem os dados do usuario la no firebase
+                                                   // chamando a funcao assincrona de logout   
  return (
    <View>
     <Text>
@@ -17,6 +17,10 @@ export default function Home() {
     <Text>
       {user && user.email}
     </Text>
+    <Button
+      title='sair da conta'
+      onPress={()=> { logout()  }}
+    />
    </View> 
   );
 }
