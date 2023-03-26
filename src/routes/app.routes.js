@@ -25,8 +25,8 @@ function AppRoutes(){
                 drawerInactiveBackgroundColor: '#000', // cor de fundo de rota não ativo dentro do drawer
                 drawerInactiveTintColor: '#DDD',  //cor de link não ativo
         
-                headerTitleAlign: 'center',
-                
+        
+                headerShown: false, // desativando o header do drawer
                 headerStyle: {
                   backgroundColor : '#FFF',
                 },
@@ -34,6 +34,7 @@ function AppRoutes(){
                 drawerItemStyle: {
                     marginVertical: 5,
                 }
+                
               }}  
         >
 

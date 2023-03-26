@@ -2,6 +2,7 @@ import React, {useContext} from 'react';
 import { AuthContext } from '../../contexts/auth' // importando o context
 import { useNavigation } from '@react-navigation/native'
 import {Container, Nome, NewLink, NewText, Logout, LogoutText} from './styles'
+import Header from '../../components/Header';
 
 
 
@@ -14,6 +15,7 @@ export default function Perfil() {
   
  return (
    <Container>
+      <Header/>
       <Nome>  
         {
           user && user.nome   // se user estiver ativado entao acesso user.nome
