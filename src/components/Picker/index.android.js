@@ -16,6 +16,7 @@ export default function Picker({ onChange, tipo }){
             selectedValue={tipo}
             onValueChange={ (valor) => onChange(valor) }
             >
+              <RNPickerSelect.Item label="Escolha uma opção" value="escolha" />    
               <RNPickerSelect.Item label="Receita" value="receita" />  
               <RNPickerSelect.Item label="Despesa" value="despesa" />  
             </RNPickerSelect>
