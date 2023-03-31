@@ -10,6 +10,14 @@ export default function AuthProvider({ children }){
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true) // o loading se inicia como true e funciona até fazer as verificações do useEffect ver routes > index.js 
     
+    const [loadingAuth, setLoadingAuth] = useState(false) 
+    /* 
+        state de loadingAuth inicia como false e só vai ser true assim que o usuario clicar nos botões acessa e cadastrar
+        enquanto estiver true o ActivityIndicator ficara funcionando assim que tiver o retorno de sucesso ou do login ou do cadastro com sucesso
+        ai sim ele se torna false e desliga o ActivityIndicator
+
+    */
+    
 
     useEffect(() => { // funcao que vai iniciar toda vez que o app inicar
 
@@ -35,6 +43,9 @@ export default function AuthProvider({ children }){
 
     // Funcao para logar o usuario
     async function login(email, password){
+
+        setLoadingAuth(true)    
+
         await firebase.auth().signInWithEmailAndPassword(email, password) // acessa o database e loga com os parametros emai e password
         .then(async(value)=> { // deu certo
             
@@ -52,11 +63,14 @@ export default function AuthProvider({ children }){
                 setUser(data) // adiciona ps dados de user pela variavel a state user para poder acessa-lo de maneira dinamica
                 
                 salvaDadosUser(data) // funcao dque mantem login recebendo os dados do firebase
+
+                setLoadingAuth(false)
             })
 
         })
         .catch((error)=> {
             alert(error.code)
+            setLoadingAuth(false)
         })
     }   
 
@@ -65,8 +79,9 @@ export default function AuthProvider({ children }){
     // cadastro de usuario
     async function cadastro(email, password, nome){ // funcao ssincrona que recebe 3 parametros para cadastro
         
+        setLoadingAuth(true)
+
         await firebase.auth().createUserWithEmailAndPassword(email,password) // criacao de autenticacao com email e senha
-        
         .then( async (value) => { // deu certo criou a autentificacao
 
             let uid = value.user.uid // let uid recebe o uid la do firebase
@@ -76,7 +91,7 @@ export default function AuthProvider({ children }){
                 saldo: 0,
                 nome: nome
             })
-            .then(()=>{ // deu certo criou os 2 filhos linkado ao user então
+            .then(() => { // deu certo criou os 2 filhos linkado ao user então
 
                 let data ={ // objeto data recebe os dados do user
                     uid: uid,
@@ -86,6 +101,8 @@ export default function AuthProvider({ children }){
                 setUser(data) // adiciona os dados ao state user ou seja agora o state user tera acesso a todos os dados do database do usuario logado             
                 
                 salvaDadosUser(data) // funcao que mantem login recebendo os dados do firebase
+
+                setLoadingAuth(false)
             })
             /**
              Explicando o codigo 
@@ -99,6 +116,7 @@ export default function AuthProvider({ children }){
         })
         .catch((error)=> {
             alert(error.code)
+            setLoadingAuth(false)
         })
     }
 
@@ -126,7 +144,7 @@ export default function AuthProvider({ children }){
     return(
         <AuthContext.Provider 
             value={ 
-                {signed: !!user ,user, cadastro, login, logout, loading} }>
+                {signed: !!user ,user, cadastro, login, logout, loading, loadingAuth} }>
             {children}
         </AuthContext.Provider>
     )

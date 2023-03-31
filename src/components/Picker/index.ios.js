@@ -1,24 +1,30 @@
-import React from "react";
-
-// para instalar o picker o comando é npx expo install @react-native-picker/picker
-// olhar https://docs.expo.dev/versions/latest/sdk/picker/
-
-import { Picker as RNPickerSelect } from '@react-native-picker/picker'; // alterei o nome do picker pq estava dando conflito com o nome do component
+import React from 'react';
+import RNPickerSelect from 'react-native-picker-select';
 import { PickerView } from './styles';
 
-export default function Picker({ onChange, tipo }){
+export default function Picker({ onChange }){
     return(
         <PickerView>
             <RNPickerSelect
             style={{
-                width:'100%'
+                inputIOS:{
+                    height: 50,
+                    padding: 5,
+                    backgroundColor: '#FFF',
+                    fontSize: 16
+                }
             }}
-            selectedValue={tipo}
-            onValueChange={ (valor) => onChange(valor) }
-            >
-              <RNPickerSelect.Item label="Receita" value="receita" />  
-              <RNPickerSelect.Item label="Despesa" value="despesa" />  
-            </RNPickerSelect>
+            placeholder={{
+                label: 'Selecione o tipo',
+                color: '#222',
+                value: null,
+            }}
+            onValueChange={ (tipo) => onChange(tipo) }
+            items={[
+                {label: 'Receita', value: 'receita', color: '#222'},
+                {label: 'Despesa', value: 'despesa', color: '#222'},
+            ]}
+            />
         </PickerView>
     )
 }

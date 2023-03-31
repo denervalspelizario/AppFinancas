@@ -53,7 +53,6 @@ export default function New() {
     let uid = usuario.uid // buscando o uid do usuario logado atravez do AuthContext 
 
     let key = await firebase.database().ref('historico').child(uid).push().key; // gerando key filha(child) aleatoria com nome de historico linkado ao user logado
-
     await firebase.database().ref('historico').child(uid).child(key).set({ // adicionado a key historico os dados
 
       tipo: tipo, // state tipo

@@ -1,6 +1,6 @@
 import React, {useState, useContext} from 'react'; // para usar o context precisa importa-lo
 import { View, Text } from 'react-native';
-import { Platform } from 'react-native'; //  elemento para saber qual plataforma se esta ultilizando android/ios
+import { Platform, ActivityIndicator } from 'react-native'; //  elemento para saber qual plataforma se esta ultilizando android/ios
 import { useNavigation } from '@react-navigation/native' // importando a biblioteca de navegação
 import { Background, Container, Logo, AreaInput, Input, 
          SubmitButton, SubmitText, Link, Linktext, 
@@ -11,7 +11,7 @@ export default function SignIn() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const { login } = useContext(AuthContext)
+  const { login, loadingAuth } = useContext(AuthContext)
 
   const navigation = useNavigation() // acessando a navegação
   //const { user } = useContext(AuthContext) // acessando contexto user (ver src > contexts > auth.js)
@@ -55,7 +55,13 @@ export default function SignIn() {
         />
       </AreaInput>  
         <SubmitButton  onPress={logar}>
-          <SubmitText>Acessar</SubmitText>
+          {
+            loadingAuth ?  // se state loadingauth estiver true
+                 ( <ActivityIndicator/> )  // icon de loading
+              : 
+                ( <SubmitText>Acessar</SubmitText> ) // senão renderiza o texto do btn 
+          }
+          
         </SubmitButton>
 
         <Link

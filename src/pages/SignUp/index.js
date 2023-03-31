@@ -1,6 +1,6 @@
 import React, {useState, useContext} from 'react';
 import { View, Text } from 'react-native';
-import { Platform } from 'react-native'; //  elemento para saber qual plataforma se esta ultilizando android/ios
+import { Platform, ActivityIndicator } from 'react-native'; //  elemento para saber qual plataforma se esta ultilizando android/ios
 
 import { Background, Container, Logo, AreaInput, Input, 
          SubmitButton, SubmitText, Link, Linktext, 
@@ -11,7 +11,7 @@ export default function SignUp() {
   const [nome, setNome] = useState('')  
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const { cadastro } = useContext(AuthContext) // acessando contexto jogando na cont user (ver src > contexts > auth.js) naoe squeça de importar ver linha 8
+  const { cadastro, loadingAuth } = useContext(AuthContext) // acessando contexto jogando na cont user (ver src > contexts > auth.js) naoe squeça de importar ver linha 8
   
   function funcaoCadastro(){          // funcao que ao clicar adiciona as states que são dados do input na 
                                       // funcao cadastro que envia esses dados la no firebase ( ver src > contexts > auth.js  )
@@ -60,7 +60,12 @@ export default function SignUp() {
         <SubmitButton 
           onPress={funcaoCadastro} // ao clicar chama a funcaod e cadastro
            >
-          <SubmitText>Cadastrar</SubmitText>
+          {
+            loadingAuth ?  // se state loadingauth estiver true 
+                 ( <ActivityIndicator/> )  // icon de loading
+              : 
+                ( <SubmitText>Cadastrar</SubmitText> ) // senão renderiza o texto do btn 
+          }
         </SubmitButton>
      
 
