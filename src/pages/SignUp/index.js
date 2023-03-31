@@ -53,8 +53,10 @@ export default function SignUp() {
           placeholder='Password'
           autoCorrect={false}
           autoCapitalize='none'
+          secureTextEntry={true} // esconder dados
           value={password}
           onChangeText={(text) => setPassword(text) }
+
         />
       </AreaInput>  
         <SubmitButton 

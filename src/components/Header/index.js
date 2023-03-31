@@ -10,7 +10,7 @@ export default function Header() {
   return (
      <Container>
       <ButtonMenu onPress={() => navigation.toggleDrawer()}>
-        <Entypo name="menu" size={28} color="#FFF" />
+        <Entypo name="menu" size={35} color="#FFF" />
       </ButtonMenu>
      </Container> 
   );

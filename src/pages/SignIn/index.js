@@ -52,6 +52,7 @@ export default function SignIn() {
           autoCapitalize='none'
           value={password}
           onChangeText={(text) => setPassword(text) }
+          secureTextEntry={true} // esconder dados
         />
       </AreaInput>  
         <SubmitButton  onPress={logar}>
