@@ -4,7 +4,7 @@ import Header from '../../components/Header';
 import {Container, Background, Nome, Saldo, Title, List} from './styles'
 import HitoricoList from '../../components/HitoricoList';
 import firebase from '../../services/FirebaseConnection';
-import { format, isPast } from 'date-fns'
+import { format, isBefore } from 'date-fns'
 import { Alert } from 'react-native';
 
 export default function Home() {
@@ -28,7 +28,7 @@ export default function Home() {
 
       await firebase.database().ref('historico') // acessando o historico
       .child(uid) // depois de acessar o historico o uid
-      .orderByChild('date').equalTo(format(new Date, 'dd/MM/yy')) // order todos que tem a data de hoje - usando a biblioteca date-sf para formatar do jeito que aplicação pede
+      .orderByChild('date').equalTo(format(new Date, 'dd/MM/yyyy')) // order todos que tem a data de hoje - usando a biblioteca date-sf para formatar do jeito que aplicação pede
       .limitToLast(10).on('value', (snapshot) => { // retornando apenas os ultimos 10
         
         setHistorico([]); // garantindo que esteja zerado o state historico
@@ -54,7 +54,20 @@ export default function Home() {
 
   //FUNCAO QUE AO CHAMADA VERIFICA DATA SE DATA JA PASSOU RETORNA ALERTA SENAO OUTRO ALERTA COM ALERTA QUE CONTEM DADOS E BTN QUE CHAMA FUNCAO DELETESUCESS 
   function handleDelete(data){
-    if( !isPast(new Date(data.date)) ){ //isPast devolve um boolen - cria um data nova com base na data dentro o Data e verifica se essa data ja passou se JA PASSOU devolve um true
+
+    //Pegando data do item: 
+    const [diaItem, mesItem, anoItem] = data.date.split('/');
+    const dateItem = new Date(`${anoItem}/${mesItem}/${diaItem}`)
+    
+
+    //Pegando a data de hoje
+    const formatDiaHoje = format(new Date(), 'dd/MM/yyyy');
+    const [diaHoje, mesHoje, anoHoje] = formatDiaHoje.split('/')
+    const dateHoje = new Date(`${anoHoje}/${mesHoje}/${diaHoje}`)
+    
+
+
+    if( isBefore(dateItem, dateHoje) ){ //isBefore devolve um boolen - compara se dataItem é ANTERIOR a dateHoje (nao esquecer de importar isBefore de date-fns) 
       // se a data do registro ja passou entra aqui !!
       alert('Voce não pode excluir um registro antigo!');
       return;

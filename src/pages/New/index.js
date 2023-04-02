@@ -57,7 +57,7 @@ export default function New() {
 
       tipo: tipo, // state tipo
       valor: parseFloat(valor), //state valor - precisou tranforma-la de string para number
-      date: format(new Date(), 'dd/MM/yy') // anexando data no formato que seja padrao para ios e android atravez da biblioteca date-fns
+      date: format(new Date(), 'dd/MM/yyyy') // anexando data no formato que seja padrao para ios e android atravez da biblioteca date-fns
 
     })
     // atualizando o saldo
