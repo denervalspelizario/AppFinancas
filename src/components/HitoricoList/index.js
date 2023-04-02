@@ -1,13 +1,15 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableWithoutFeedback } from 'react-native';
 import { Container } from '../Header/styles';
 import { Ionicons } from '@expo/vector-icons';
 import { ContainerHistorico, Tipo, IconView, ValorText, TipoText} from './styles'
 
 
-export default function HitoricoList({data}) {
+export default function HitoricoList({data, deleteItem}) { // acessando data e a funcao deleteItem
  return (
-   
+   <TouchableWithoutFeedback 
+      onLongPress={() => deleteItem(data) // quando der um longo click acessa  funcao deleteItem que contem todo o data
+    }>
     <ContainerHistorico>
       <Tipo>
         <IconView tipo={data.tipo}>
@@ -18,9 +20,10 @@ export default function HitoricoList({data}) {
         </IconView>
       </Tipo>  
         <ValorText>
-          R$: {data.valor}
+          R$: {data.valor} 
         </ValorText>
       
     </ContainerHistorico>
+    </TouchableWithoutFeedback>
   );
 }

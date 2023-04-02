@@ -4,7 +4,8 @@ import Header from '../../components/Header';
 import {Container, Background, Nome, Saldo, Title, List} from './styles'
 import HitoricoList from '../../components/HitoricoList';
 import firebase from '../../services/FirebaseConnection';
-import { format } from 'date-fns'
+import { format, isPast } from 'date-fns'
+import { Alert } from 'react-native';
 
 export default function Home() {
 
@@ -36,7 +37,8 @@ export default function Home() {
           let list = { 
             key: childItem.key,  // recebendo key
             tipo: childItem.val().tipo, // recebendo tipo de gasto
-            valor: childItem.val().valor // recebendo valor
+            valor: childItem.val().valor, // recebendo valor
+            date: childItem.val().date, // propriedade quando foi adicionando estes itens
           };
 
         setHistorico(oldArray => [...oldArray, list].reverse()) // adicionando dados guardados e dados atuais a state historico que serão renderizados la no componet List
@@ -47,6 +49,52 @@ export default function Home() {
     loadList() // chamando a funcao para que ela possa ser executada
 
   }, []) // SERÁ RENDERIZADA ASSIM QUE SE INICIA A APLICAÇÃO
+
+
+
+  //FUNCAO QUE AO CHAMADA VERIFICA DATA SE DATA JA PASSOU RETORNA ALERTA SENAO OUTRO ALERTA COM ALERTA QUE CONTEM DADOS E BTN QUE CHAMA FUNCAO DELETESUCESS 
+  function handleDelete(data){
+    if( !isPast(new Date(data.date)) ){ //isPast devolve um boolen - cria um data nova com base na data dentro o Data e verifica se essa data ja passou se JA PASSOU devolve um true
+      // se a data do registro ja passou entra aqui !!
+      alert('Voce não pode excluir um registro antigo!');
+      return;
+    }
+      Alert.alert(
+        'Cuidado Atenção!',
+        `Você deseja excluir ${data.tipo} - Valor: ${data.valor}`,
+        [
+          {
+            text: 'Cancelar',
+            style: 'cancel'
+          },
+          {
+            text: 'Continuar',
+            onPress: () => handleDeleteSucess(data)
+          }
+        ]
+      )
+    
+  }
+
+  // 
+  async function handleDeleteSucess(data){ // funcao receb todo o data
+    await firebase.database().ref('historico') // acessa historico> uid> key filha(que é os dados despe e receita) > funcao para remover
+    .child(uid).child(data.key).remove()
+    .then( async () => { // deu certo  removeu a key
+
+      let saldoAtual = saldo
+      data.tipo === 'despesa' ? // condicional para atualizar valor de saldo 
+        saldoAtual += parseFloat(data.valor)  // se for depesa saldoAtual recebe saldo + valor de item que foi clicado para ser excluido
+        :
+        saldoAtual -= parseFloat(data.valor); // senao sera receita então subtrai saldo - valor de item que foi clicado para ser excluido
+
+        await firebase.database().ref('users').child(uid)
+        .child('saldo').set(saldoAtual);
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
 
                                                     
  return (
@@ -70,7 +118,7 @@ export default function Home() {
         showsVerticalScrollIndicator={false}
         data={historico} // recebe os dados atravez da state historico
         keyExtractor={item => item.key} // key de referencia
-        renderItem={({ item }) => (<HitoricoList data={item} />)} // renderiza o component historico list que tb repassa a ele o item que contem todo os dados da state historico
+        renderItem={({ item }) => (<HitoricoList data={item}  deleteItem={handleDelete} />)} // renderiza o component historico list que tb repassa a ele o item que contem todo os dados da state historico
       
       />
    </Background>
