@@ -1,11 +1,13 @@
 import React, {useContext, useState, useEffect} from 'react';
 import {AuthContext} from '../../contexts/auth'
 import Header from '../../components/Header';
-import {Container, Background, Nome, Saldo, Title, List} from './styles'
+import {Container, Background, Nome, Saldo, Title, List, Area} from './styles'
 import HitoricoList from '../../components/HitoricoList';
 import firebase from '../../services/FirebaseConnection';
 import { format, isBefore } from 'date-fns'
-import { Alert } from 'react-native';
+import { Alert, Platform, TouchableOpacity } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import DatePicker from '../../components/DatePicker';
 
 export default function Home() {
 
@@ -14,6 +16,9 @@ export default function Home() {
 
   const { user} = useContext(AuthContext) // acessando o user do contexto que contem os dados do usuario la no firebase
   const uid  = user && user.uid //acessdando o uid do user e jogando na consta uid
+
+  const [newDate, setNewDate] = useState(new Date()) // state que inicia um uma nova data
+  const [show, setShow] = useState(false)// state que vai controler o date picker que precisa se iniciar como false
 
 
   // FUNCAO QUE RENDERIZA AS ULTIMAS 10 OPERAÇÕES
@@ -28,7 +33,7 @@ export default function Home() {
 
       await firebase.database().ref('historico') // acessando o historico
       .child(uid) // depois de acessar o historico o uid
-      .orderByChild('date').equalTo(format(new Date, 'dd/MM/yyyy')) // order todos que tem a data de hoje - usando a biblioteca date-sf para formatar do jeito que aplicação pede
+      .orderByChild('date').equalTo(format(newDate, 'dd/MM/yyyy')) // order todos que tem a data de hoje - usando a biblioteca date-sf para formatar do jeito que aplicação pede
       .limitToLast(10).on('value', (snapshot) => { // retornando apenas os ultimos 10
         
         setHistorico([]); // garantindo que esteja zerado o state historico
@@ -48,7 +53,7 @@ export default function Home() {
 
     loadList() // chamando a funcao para que ela possa ser executada
 
-  }, []) // SERÁ RENDERIZADA ASSIM QUE SE INICIA A APLICAÇÃO
+  }, [newDate]) // SERÁ RENDERIZADA ASSIM QUE SE INICIA A APLICAÇÃO
 
 
 
@@ -89,7 +94,7 @@ export default function Home() {
     
   }
 
-  // 
+  // FUNCAO ACESSA O HISTORICO NO FIREBASE E REMOVE ITEM E ATUALIZA O SALDO NO APP E NO FIREBASE
   async function handleDeleteSucess(data){ // funcao receb todo o data
     await firebase.database().ref('historico') // acessa historico> uid> key filha(que é os dados despe e receita) > funcao para remover
     .child(uid).child(data.key).remove()
@@ -109,6 +114,22 @@ export default function Home() {
     })
   }
 
+  // FUNÇÃO PARA ABRIR O PICKER TIME
+  function showPicker(){
+    setShow(true)
+  }
+
+  // FUNÇÃO PARA FECHAR O PICKER TIME
+  function closePicker(){
+    setShow(false)
+  }
+
+  const onChange = (date) => {
+    setShow(Platform.OS === 'ios')  // se for ios state show vira true senão(é android) é false
+    setNewDate(date)
+    console.log(date)
+  }
+
                                                     
  return (
    <Background>
@@ -125,7 +146,14 @@ export default function Home() {
             } 
           </Saldo>
       </Container>
-      <Title>Ultimas  movimentações</Title>
+
+      <Area>
+        <TouchableOpacity onPress={showPicker}>
+          <MaterialIcons name="event-note" size={28} color="#FFF" />    
+        </TouchableOpacity>
+        <Title>Ultimas  movimentações</Title>
+      </Area>
+      
 
       <List
         showsVerticalScrollIndicator={false}
@@ -134,6 +162,16 @@ export default function Home() {
         renderItem={({ item }) => (<HitoricoList data={item}  deleteItem={handleDelete} />)} // renderiza o component historico list que tb repassa a ele o item que contem todo os dados da state historico
       
       />
+
+      {show && (   // se state show estiver true
+        <DatePicker
+            onClose={closePicker} // funcao que fecha o picker
+            date={newDate}
+            onChange={onChange}
+        
+        />
+      )}      
+
    </Background>
   );
 }
